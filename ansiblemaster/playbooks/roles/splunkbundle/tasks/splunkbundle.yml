@@ -1,0 +1,28 @@
+---
+
+ - name: Create new git folder
+   file:
+     path: /tmp/git1
+     state: directory  
+
+
+ - name: Download configs
+   git:
+     repo: git@github.com:naidusadanala/bitsiotest.git
+     dest: /tmp/git1
+
+ - name: make /tmp/git1 writetable by splunk
+   file: path=/tmp/git1 mode=777  
+
+ - name: copy configs from git to splunk master-apps 
+   command: "rsync -ac --no-perms --modify-window=100000000 --delete --stats /tmp/git1/  /opt/splunk/etc/master-apps"   
+   register: rsync_output
+   changed_when: "rsync_output.stdout_lines[2].find('Number of files transferred: 0') == -1" 
+   become: yes
+   become_user: splunk
+
+
+ - name: Validate Cluster Bundle and deploy
+   shell: /opt/splunk/bin/splunk apply cluster-bundle --answer-yes -auth admin:splunkteja 
+   become: yes
+   become_user: splunk  

@@ -1,0 +1,9 @@
+---
+# This playbook deploys all sub playbooks
+
+- name: apply bundle 
+  hosts: cm
+  user: root
+
+  roles:
+    - splunkbundle

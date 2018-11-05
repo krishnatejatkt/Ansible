@@ -1,0 +1,17 @@
+---
+# This playbook deploys all sub playbooks
+
+- name: apply common configuration to all nodes
+  hosts: cm
+  user: root
+
+  roles:
+    - splunkuninstall
+
+- name: apply common configuration to all nodes
+  hosts: peers
+  user: root
+
+  roles:
+    - splunkuninstall
+
